@@ -45,25 +45,79 @@ Relationships between the datasets
 They are connected through one shared key, patient_id. The patient profile dataset provides long-term demographic information, which remains relatively stable over time, and the admission dataset provides short-term clinical and operational details for each hospital visit. Integrating these datasets allows a complete view of patient risk factors and hospital outcomes.
 
 
----
+---------------------------------------------------------------------------------------------------
+**ETL Process**
+Load Data: CSV files uploaded to Google Colab and loaded into Pandas DataFrames.
 
-## Features
+Preprocessing:
 
-- **ETL Operations:** Clean, preprocess, and integrate two datasets:  
-  - `Patient_profile_lifestyle.csv` – patient demographics and lifestyle information.  
-  - `Admission_clinical_data.csv` – hospital admission and clinical records.  
-- **Big Data Storage:**  
-  - Store processed data in **HDFS** for scalable access.  
-  - Store structured data in **Hive** tables.  
-  - Store semi-structured JSON-like data in **MongoDB** collections.  
-- **Real-Time Streaming:**  
-  - Kafka producer reads integrated dataset and sends messages to `hospital_admissions` topic.  
-  - Kafka consumer receives messages and processes them in real-time for clustering.  
-- **Data Analysis & Clustering:**  
-  - Apache Spark Structured Streaming is used to monitor incoming data.  
-  - K-Means clustering groups patients into risk categories.  
+Check for missing values and duplicates.
 
----
+Handle missing values using mean, median, or mode imputation based on skewness.
+
+Detect and handle outliers using boxplots.
+
+Standardize data types for numerical columns.
+
+Integration:
+
+Inner join datasets on patient_id to create a unified dataset.
+
+Validate dataset: 9999 rows and 23 columns.
+
+Save Files: Export as CSV and Parquet for scalable analytics.
+
+**HDFS & Data Storage**
+
+Setup Hadoop 3.3.6 in Google Colab.
+
+Configure environment variables: JAVA_HOME, HADOOP_HOME, PATH.
+
+Create HDFS directories for raw and processed data.
+
+Upload datasets and verify row counts.
+
+**Hive & MongoDB**
+
+Hive:
+
+Store integrated dataset as a Hive table in Parquet format.
+
+Execute SQL queries to analyse readmission risk and patient clusters.
+
+MongoDB:
+
+Store semi-structured datasets as JSON-like documents.
+
+Use PyMongo to insert and query documents.
+
+Combine
+
+**Real-Time Data Clustering with Spark Streaming**
+
+Simulate hospital event stream with integrated CSV dataset.
+
+Spark Structured Streaming reads new records incrementally.
+
+Feature Engineering Pipeline: scale features, prepare dataset for clustering.
+
+K-Means Clustering: identify patient risk groups:
+
+Cluster 0 – Low social support, high readmission risk.
+
+Cluster 1 – High social support, low readmission risk, short length of stay.
+
+Save results in Parquet for further analysis.
+
+**Kafka Streaming Pipeline**
+
+Kafka runs in Kraft mode inside Docker.
+
+Producer.py: sends each row of CSV as a JSON message to the Kafka topic.
+
+Consumer.py: reads messages, applies feature scaling, clusters patients using K-Means.
+
+------------------------------------------------------------------------------------------------
 # Project Structure
 
 **PythonProject**/
