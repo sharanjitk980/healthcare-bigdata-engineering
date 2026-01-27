@@ -73,9 +73,7 @@ Setup Hadoop 3.3.6 in Google Colab.
 
 Configure environment variables: JAVA_HOME, HADOOP_HOME, PATH.
 
-Create HDFS directories for raw and processed data.
-
-Upload datasets and verify row counts.
+save file to HDFS
 
 **Hive & MongoDB**
 
